@@ -47,11 +47,27 @@ public class AdicionarEditarActivity extends AppCompatActivity {
         }
         init();
 
-        // Lógica para Edição (se um ID for passado)
         if (getIntent().hasExtra(EXTRA_TAREFA_ID)) {
             setTitle("Editar Tarefa");
+
+            // 1. Obter o ID da Tarefa
             tarefaId = getIntent().getIntExtra(EXTRA_TAREFA_ID, -1);
-            // TODO: Carregar os dados da tarefa existente para os campos
+
+            // 2. Carregar os restantes dados para os campos
+            editTextTitulo.setText(getIntent().getStringExtra(EXTRA_TAREFA_TITULO));
+            editTextDescricao.setText(getIntent().getStringExtra(EXTRA_TAREFA_DESCRICAO));
+
+            // 3. Carregar Prioridade
+            int prioridade = getIntent().getIntExtra(EXTRA_TAREFA_PRIORIDADE, 1);
+            spinnerPrioridade.setSelection(prioridade - 1);
+
+            // 4. Carregar Data de Vencimento
+            dataVencimentoTimestamp = getIntent().getLongExtra(EXTRA_TAREFA_DATA_VENCIMENTO, 0);
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(dataVencimentoTimestamp);
+            // Chama a função que atualiza o TextView da data
+            atualizarDataVencimentoUI(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+
         } else {
             setTitle("Adicionar Tarefa");
         }
