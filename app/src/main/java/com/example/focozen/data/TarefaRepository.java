@@ -17,12 +17,21 @@ public class TarefaRepository {
 
     private TarefaDao tarefaDao;
     private LiveData<List<Tarefa>> todasTarefas;
+    private LiveData<List<Tarefa>> allTarefasByDate;
+    private LiveData<List<Tarefa>> allTarefasByPriority;
+    private LiveData<List<Tarefa>> pendingTarefas;
+    private LiveData<List<Tarefa>> completedTarefas;
 
     public TarefaRepository(Application application) {
         TarefaDatabase database = TarefaDatabase.getInstance(application);
         tarefaDao = database.tarefaDao();
         // Inicializa o LiveData com todas as tarefas ordenadas
         todasTarefas = tarefaDao.getAllTarefas();
+        // Inicializar os novos LiveData
+        allTarefasByDate = tarefaDao.getAllTarefasByDate();
+        allTarefasByPriority = tarefaDao.getAllTarefasByPriority();
+        pendingTarefas = tarefaDao.getPendingTarefas();
+        completedTarefas = tarefaDao.getCompletedTarefas();
     }
 
     // --- Métodos para a UI chamar ---
@@ -43,6 +52,21 @@ public class TarefaRepository {
         return todasTarefas;
     }
 
+    public LiveData<List<Tarefa>> getAllTarefasByDate() {
+        return allTarefasByDate;
+    }
+
+    public LiveData<List<Tarefa>> getAllTarefasByPriority() {
+        return allTarefasByPriority;
+    }
+
+    public LiveData<List<Tarefa>> getPendingTarefas() {
+        return pendingTarefas;
+    }
+
+    public LiveData<List<Tarefa>> getCompletedTarefas() {
+        return completedTarefas;
+    }
     // --- AsyncTasks para operações em background ---
 
     private static class InsertTarefaAsyncTask extends AsyncTask<Tarefa, Void, Void> {

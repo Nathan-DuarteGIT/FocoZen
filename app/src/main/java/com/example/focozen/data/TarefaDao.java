@@ -34,9 +34,19 @@ public interface TarefaDao {
     @Query("SELECT * FROM tarefas ORDER BY prioridade DESC, dataVencimento ASC")
     LiveData<List<Tarefa>> getAllTarefas();
 
-    /**
-     * Obtém tarefas filtradas por estado (concluída ou pendente).
-     */
-    @Query("SELECT * FROM tarefas WHERE concluida = :status ORDER BY prioridade DESC, dataVencimento ASC")
-    LiveData<List<Tarefa>> getTarefasByStatus(boolean status);
+    // Query original (agora para ordenação por data)
+    @Query("SELECT * FROM tarefas ORDER BY dataVencimento ASC")
+    LiveData<List<Tarefa>> getAllTarefasByDate();
+
+    // Nova Query: Ordenar por Prioridade (Prioridade 3, 2, 1)
+    @Query("SELECT * FROM tarefas ORDER BY prioridade DESC")
+    LiveData<List<Tarefa>> getAllTarefasByPriority();
+
+    // Nova Query: Filtrar por Pendentes (concluida = 0)
+    @Query("SELECT * FROM tarefas WHERE concluida = 0 ORDER BY dataVencimento ASC")
+    LiveData<List<Tarefa>> getPendingTarefas();
+
+    // Nova Query: Filtrar por Concluídas (concluida = 1)
+    @Query("SELECT * FROM tarefas WHERE concluida = 1 ORDER BY dataVencimento ASC")
+    LiveData<List<Tarefa>> getCompletedTarefas();
 }

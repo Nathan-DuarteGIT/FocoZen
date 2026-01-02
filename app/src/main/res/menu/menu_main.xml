@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Opção de Ordenação -->
+    <item
+        android:id="@+id/action_sort"
+        android:title="Ordenar"
+        android:icon="@drawable/ic_sort"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/sort_by_date"
+                android:title="Por Data de Vencimento" />
+            <item
+                android:id="@+id/sort_by_priority"
+                android:title="Por Prioridade" />
+        </menu>
+    </item>
+
+    <!-- Opção de Filtro -->
+    <item
+        android:id="@+id/action_filter"
+        android:title="Filtrar"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/filter_all"
+                android:title="Todas as Tarefas" />
+            <item
+                android:id="@+id/filter_pending"
+                android:title="Pendentes" />
+            <item
+                android:id="@+id/filter_completed"
+                android:title="Concluídas" />
+        </menu>
+    </item>
+
+</menu>
