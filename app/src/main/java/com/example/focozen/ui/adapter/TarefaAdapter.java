@@ -19,35 +19,53 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Adapter para o RecyclerView que exibe a lista de Tarefas.
+ * TarefaAdapter
+ * --------------------------------------------------
+ * Adapter do RecyclerView responsável por:
+ *  - Exibir a lista de tarefas
+ *  - Atualizar a UI conforme o estado da tarefa
+ *  - Tratar cliques para edição
+ *  - Tratar a marcação de tarefas como concluídas
  */
 public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaViewHolder> {
 
     private List<Tarefa> tarefas = new ArrayList<>();
     private final Context context;
     private OnItemClickListener listener;
-
+    /**
+     * Construtor do Adapter
+     */
     public TarefaAdapter(Context context) {
+
         this.context = context;
     }
 
     /**
-     * Obtém a tarefa numa posição específica.
+     * Retorna a tarefa numa posição específica
+     * (usado para swipe delete na MainActivity)
      */
     public Tarefa getTarefaAt(int position) {
+
         return tarefas.get(position);
     }
 
-    // Interface para lidar com cliques (para edição)
+    /**
+     * Interface para comunicar eventos do Adapter com a Activity
+     */
     public interface OnItemClickListener {
         void onItemClick(Tarefa tarefa);
         void onConcluidaClick(Tarefa tarefa, boolean isChecked);
     }
-
+    /**
+     * Define o listener externo (MainActivity)
+     */
     public void setOnItemClickListener(OnItemClickListener listener) {
+
         this.listener = listener;
     }
-
+    /**
+     * Cria o ViewHolder (infla o layout do item, torna o list_item_tarefa algo real)
+     */
     @NonNull
     @Override
     public TarefaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,7 +73,9 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
                 .inflate(R.layout.list_item_tarefa, parent, false);
         return new TarefaViewHolder(itemView);
     }
-
+    /**
+     * Associa os dados da tarefa ao ViewHolder
+     */
     @Override
     public void onBindViewHolder(@NonNull TarefaViewHolder holder, int position) {
         Tarefa currentTarefa = tarefas.get(position);
@@ -77,11 +97,12 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             holder.textViewTitulo.setTextColor(context.getResources().getColor(R.color.black_text));
         }
 
-        // 2. Prioridade
+        /**
+         * Prioridade da tarefa
+         */
         String prioridadeTexto = getPrioridadeTexto(currentTarefa.getPrioridade());
         holder.textViewPrioridade.setText(prioridadeTexto);
 
-        // NOVO CÓDIGO: Definir o background com base na prioridade
         int backgroundResId;
         switch (currentTarefa.getPrioridade()) {
             case 3: // ALTA
@@ -100,38 +121,52 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             holder.textViewPrioridade.setBackgroundResource(backgroundResId);
         }
 
-        // 3. Data de Vencimento
+        /**
+         * Data de vencimento
+         */
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String dataFormatada = sdf.format(currentTarefa.getDataVencimento());
         holder.textViewData.setText(context.getString(R.string.label_due_date) + dataFormatada);
 
-        // 4. Comportamento de Clique (para Edição)
+        /**
+         * Clique no item (editar tarefa)
+         */
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(currentTarefa);
             }
         });
 
-        // 5. Comportamento do CheckBox (para Marcar como Concluída)
+        /**
+         * Clique no CheckBox (concluir tarefa)
+         */
         holder.checkBoxConcluida.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (listener != null) {
                 listener.onConcluidaClick(currentTarefa, isChecked);
             }
         });
     }
-
+    /**
+     * Retorna o número de itens da lista
+     */
     @Override
     public int getItemCount() {
+
         return tarefas.size();
     }
 
-    // Método para atualizar a lista de tarefas (chamado pelo LiveData na MainActivity)
+     /**
+     * Atualiza a lista de tarefas
+     * (chamado pelo LiveData na MainActivity)
+     */
     public void setTarefas(List<Tarefa> tarefas) {
         this.tarefas = tarefas;
         notifyDataSetChanged();
     }
 
-    // Método auxiliar para converter o int da prioridade em texto
+    /**
+     * Converte o valor inteiro da prioridade em texto
+     */
     private String getPrioridadeTexto(int prioridade) {
         // O array de prioridades é 0-based (0, 1, 2)
         // O valor da prioridade na BD é 1-based (1, 2, 3)
@@ -148,7 +183,11 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         return "N/A";
     }
 
-    // ViewHolder: Mapeia os elementos do layout para a classe Java
+    /**
+     * ViewHolder
+     * --------------------------------------------------
+     * Mapeia os elementos do layout list_item_tarefa
+     */
     class TarefaViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewTitulo;
         private final TextView textViewData;

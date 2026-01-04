@@ -24,13 +24,26 @@ import com.example.focozen.ui.adapter.TarefaAdapter;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * MainActivity
+ * --------------------------------------------------
+ * Activity principal da aplicação.
+ * Responsável por:
+ *  - Mostrar a lista de tarefas
+ *  - Ordenar e filtrar tarefas
+ *  - Adicionar, editar, concluir e eliminar tarefas
+ *  - Alterar o idioma da aplicação
+ */
 public class MainActivity extends AppCompatActivity {
 
+    // Repositório responsável pelo acesso aos dados (Room / DB)
     private TarefaRepository tarefaRepository;
+    // Adapter do RecyclerView
     private TarefaAdapter tarefaAdapter;
+    // Componentes da UI
     private RecyclerView recyclerView;
     private FloatingActionButton fabAdicionarTarefa;
-
+    // Referências para controlo do LiveData atual
     private LiveData<List<Tarefa>> currentTarefasLiveData;
     private Observer<List<Tarefa>> currentObserver;
 
@@ -43,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Método responsável por inicializar:
+     *  - Views
+     *  - Adapter
+     *  - Repositório
+     *  - Listeners
+     *  - Observadores do LiveData
+     */
     private void init() {
         // 1 - Bindings / Associações
         recyclerView = findViewById(R.id.recyclerViewTarefas);
@@ -52,14 +73,17 @@ public class MainActivity extends AppCompatActivity {
         tarefaRepository = new TarefaRepository(getApplication());
         tarefaAdapter = new TarefaAdapter(this); // O Adapter será criado no próximo passo
 
-        // NOVO CÓDIGO: Ligar o Listener para Edição
-
 
         recyclerView.setAdapter(tarefaAdapter);
         // O LayoutManager já está definido no XML, mas pode ser definido aqui:
         // recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        /**
+         * Listener para cliques nos itens do RecyclerView
+         */
         tarefaAdapter.setOnItemClickListener(new TarefaAdapter.OnItemClickListener() {
+            /**
+             * Clique normal no item → abrir Activity de edição
+             */
             @Override
             public void onItemClick(Tarefa tarefa) {
                 // Lógica para iniciar a AdicionarEditarActivity em modo de Edição
@@ -75,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
                 startActivity(intent);
             }
-
+            /**
+             * Clique na checkbox de "concluída"
+             */
             @Override
             public void onConcluidaClick(Tarefa tarefa, boolean isChecked) {
                 // Lógica para o Passo 2.11 (Marcar como Concluída)
@@ -93,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
         // 3 - Observar os dados do LiveData
         observeNewLiveData(tarefaRepository.getAllTarefasByDate());
 
-        // NOVO CÓDIGO: 5 - Configurar o Swipe para Eliminar
+        /**
+         * Swipe para eliminar tarefa (esquerda ou direita)
+         */
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -116,7 +144,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
-        // 4 - Comportamento (Listener)
+        /**
+         * Clique no FAB → adicionar nova tarefa
+         */
         fabAdicionarTarefa.setOnClickListener(v -> {
             // Lógica para iniciar a AdicionarEditarActivity
             Intent intent = new Intent(MainActivity.this, AdicionarEditarActivity.class);
@@ -124,15 +154,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
+    /**
+     * Criação do menu (ordenar, filtrar e idiomas)
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
-    // MainActivity.java
-
+    /**
+     * Tratamento dos cliques no menu
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -174,7 +207,9 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    /**
+     * Remove o observer antigo e observa um novo LiveData
+     */
     private void observeNewLiveData(LiveData<List<Tarefa>> newLiveData) {
         // 1. Remover o observador antigo (se existir)
         if (currentTarefasLiveData != null && currentObserver != null) {
@@ -188,7 +223,9 @@ public class MainActivity extends AppCompatActivity {
         // 3. Observar o novo LiveData
         currentTarefasLiveData.observe(this, currentObserver);
     }
-
+    /**
+     * Carrega o idioma guardado nas SharedPreferences
+     */
     private void loadLocale() {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("My_Lang", "pt"); // "pt" como padrão se não houver escolha
@@ -208,7 +245,9 @@ public class MainActivity extends AppCompatActivity {
 
         // NÃO CHAMAR RECREATE AQUI!
     }
-
+    /**
+     * Altera o idioma e recria a Activity
+     */
     private void changeLocaleAndRecreate(String languageCode) {
         // 1. Guardar a escolha
         saveLocale(languageCode);
@@ -223,7 +262,9 @@ public class MainActivity extends AppCompatActivity {
         // 3. Recriar a Activity
         recreate();
     }
-
+    /**
+     * Guarda o idioma escolhido nas SharedPreferences
+     */
     private void saveLocale(String languageCode) {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

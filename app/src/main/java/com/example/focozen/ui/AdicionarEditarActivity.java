@@ -18,7 +18,18 @@ import com.example.focozen.model.Tarefa;
 
 import java.util.Calendar;
 import java.util.Date;
-
+/**
+ * AdicionarEditarActivity
+ * --------------------------------------------------
+ * Activity responsável por:
+ *  - Criar novas tarefas
+ *  - Editar tarefas existentes
+ *  - Definir título, descrição, prioridade e data de vencimento
+ *
+ * Esta Activity funciona em dois modos:
+ *  - Modo Adicionar (sem EXTRA_TAREFA_ID)
+ *  - Modo Editar (com EXTRA_TAREFA_ID)
+ */
 public class AdicionarEditarActivity extends AppCompatActivity {
 
     public static final String EXTRA_TAREFA_ID = "com.example.focozen.EXTRA_TAREFA_ID";
@@ -46,7 +57,9 @@ public class AdicionarEditarActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         init();
-
+        /**
+         * Verifica se a Activity foi aberta em modo de edição
+         */
         if (getIntent().hasExtra(EXTRA_TAREFA_ID)) {
             setTitle(getString(R.string.title_edit_task));
 
@@ -72,7 +85,9 @@ public class AdicionarEditarActivity extends AppCompatActivity {
             setTitle(getString(R.string.title_add_task));
         }
     }
-
+    /**
+     * Trata o clique no botão de voltar (Up Button)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -82,24 +97,31 @@ public class AdicionarEditarActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    /**
+     * Inicializa todos os componentes da Activity
+     */
     private void init() {
         // 1 - Bindings
         editTextTitulo = findViewById(R.id.editTextTitulo);
         editTextDescricao = findViewById(R.id.editTextDescricao);
         spinnerPrioridade = findViewById(R.id.spinnerPrioridade);
         textViewDataVencimento = findViewById(R.id.textViewDataVencimento);
+        //associa o click do botão à função "guardar tarefa"
         findViewById(R.id.buttonGuardar).setOnClickListener(v -> guardarTarefa());
 
         tarefaRepository = new TarefaRepository(getApplication());
 
-        // Configurar o Spinner
+        /**
+         * Configuração do Spinner de Prioridade
+         */
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.prioridades_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPrioridade.setAdapter(adapter);
 
-        // Configurar o DatePicker
+        /**
+         * Configuração do DatePicker
+         */
         textViewDataVencimento.setOnClickListener(v -> mostrarDatePicker());
 
         // Inicializar com a data de hoje
@@ -107,7 +129,9 @@ public class AdicionarEditarActivity extends AppCompatActivity {
         dataVencimentoTimestamp = c.getTimeInMillis();
         atualizarDataVencimentoUI(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
     }
-
+    /**
+     * Mostra o DatePickerDialog para escolha da data
+     */
     private void mostrarDatePicker() {
         final Calendar c = Calendar.getInstance();
         int ano = c.get(Calendar.YEAR);
@@ -120,7 +144,9 @@ public class AdicionarEditarActivity extends AppCompatActivity {
                 }, ano, mes, dia);
         datePickerDialog.show();
     }
-
+    /**
+     * Atualiza o TextView da data e o timestamp
+     */
     private void atualizarDataVencimentoUI(int year, int month, int dayOfMonth) {
         Calendar c = Calendar.getInstance();
         c.set(year, month, dayOfMonth, 23, 59, 59); // Define a hora para o final do dia
@@ -129,7 +155,9 @@ public class AdicionarEditarActivity extends AppCompatActivity {
         String dataFormatada = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year);
         textViewDataVencimento.setText(dataFormatada);
     }
-
+    /**
+     * Valida os campos e guarda a tarefa na base de dados
+     */
     private void guardarTarefa() {
         String titulo = editTextTitulo.getText().toString().trim();
         String descricao = editTextDescricao.getText().toString().trim();
