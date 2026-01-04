@@ -48,7 +48,7 @@ public class AdicionarEditarActivity extends AppCompatActivity {
         init();
 
         if (getIntent().hasExtra(EXTRA_TAREFA_ID)) {
-            setTitle("Editar Tarefa");
+            setTitle(getString(R.string.title_edit_task));
 
             // 1. Obter o ID da Tarefa
             tarefaId = getIntent().getIntExtra(EXTRA_TAREFA_ID, -1);
@@ -69,7 +69,7 @@ public class AdicionarEditarActivity extends AppCompatActivity {
             atualizarDataVencimentoUI(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
 
         } else {
-            setTitle("Adicionar Tarefa");
+            setTitle(getString(R.string.title_add_task));
         }
     }
 
@@ -136,7 +136,7 @@ public class AdicionarEditarActivity extends AppCompatActivity {
         int prioridade = spinnerPrioridade.getSelectedItemPosition() + 1; // 0=Baixa(1), 1=Média(2), 2=Alta(3)
 
         if (titulo.isEmpty()) {
-            Toast.makeText(this, "O título é obrigatório", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_title_required), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -147,13 +147,12 @@ public class AdicionarEditarActivity extends AppCompatActivity {
             // Edição
             tarefa.setId(tarefaId);
             // Manter o estado de concluída original (se for edição)
-            // TODO: Obter o estado de concluída original da DB
             tarefaRepository.update(tarefa);
-            Toast.makeText(this, "Tarefa atualizada!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_task_updated), Toast.LENGTH_SHORT).show();
         } else {
             // Nova Tarefa
             tarefaRepository.insert(tarefa);
-            Toast.makeText(this, "Tarefa guardada!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_task_saved), Toast.LENGTH_SHORT).show();
         }
 
         finish(); // Fecha a Activity e volta para a MainActivity

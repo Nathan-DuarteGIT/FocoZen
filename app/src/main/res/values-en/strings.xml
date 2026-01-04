@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">FocoZen</string>
+    <string name="title_add_task">Add Task</string>
+    <string name="title_edit_task">Edit Task</string>
+    <string name="hint_title">Task Title</string>
+    <string name="hint_description">Description (Optional)</string>
+    <string name="label_priority">Priority:</string>
+    <string name="label_due_date">Due Date:</string>
+    <string name="label_select_date">Select Date</string>
+    <string name="button_save">Save Task</string>
+    <string name="toast_title_required">Title is required</string>
+    <string name="toast_task_saved">Task saved!</string>
+    <string name="toast_task_updated">Task updated!</string>
+    <string name="toast_task_deleted">Task deleted!</string>
+    
+    <string-array name="prioridades_array">
+        <item>Low</item>
+        <item>Medium</item>
+        <item name="High">High</item>
+    </string-array>
+    
+    <!-- Menu Strings -->
+    <string name="menu_sort">Sort</string>
+    <string name="menu_filter">Filter</string>
+    <string name="sort_by_date">By Due Date</string>
+    <string name="sort_by_priority">By Priority</string>
+    <string name="filter_all">All Tasks</string>
+    <string name="filter_pending">Pending</string>
+    <string name="filter_completed">Completed</string>
+    <string name="menu_language">Language</string>
+</resources>

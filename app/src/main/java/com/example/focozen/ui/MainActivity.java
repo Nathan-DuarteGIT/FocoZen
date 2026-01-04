@@ -1,6 +1,7 @@
 package com.example.focozen.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -21,6 +22,7 @@ import com.example.focozen.data.TarefaRepository;
 import com.example.focozen.ui.adapter.TarefaAdapter;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
+        loadLocale();
         setContentView(R.layout.activity_main);
 
         init();
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 tarefaRepository.delete(tarefa);
 
                 // Mostrar mensagem de confirmação
-                Toast.makeText(MainActivity.this, "Tarefa eliminada!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.toast_task_deleted), Toast.LENGTH_SHORT).show();
 
                 // Nota: O LiveData irá notificar o adapter da mudança na DB, atualizando a lista automaticamente.
             }
@@ -136,24 +139,36 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.sort_by_date) {
             observeNewLiveData(tarefaRepository.getAllTarefasByDate());
-            Toast.makeText(this, "Ordenar por Data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.sort_by_date), Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.sort_by_priority) {
             observeNewLiveData(tarefaRepository.getAllTarefasByPriority());
-            Toast.makeText(this, "Ordenar por Prioridade", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.sort_by_priority), Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.filter_all) {
             // O filtro "Todas" é o mesmo que ordenar por data
             observeNewLiveData(tarefaRepository.getAllTarefasByDate());
-            Toast.makeText(this, "Mostrar Todas", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.filter_all), Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.filter_pending) {
             observeNewLiveData(tarefaRepository.getPendingTarefas());
-            Toast.makeText(this, "Mostrar Pendentes", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.filter_pending), Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.filter_completed) {
             observeNewLiveData(tarefaRepository.getCompletedTarefas());
-            Toast.makeText(this, "Mostrar Concluídas", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.filter_completed), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.lang_pt) {
+            saveLocale("pt");
+            changeLocaleAndRecreate("pt");
+            Toast.makeText(this, "Mudar para Português", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.lang_en) {
+            saveLocale("en");
+            changeLocaleAndRecreate("en");
+            Toast.makeText(this, "Change to English", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -172,6 +187,48 @@ public class MainActivity extends AppCompatActivity {
 
         // 3. Observar o novo LiveData
         currentTarefasLiveData.observe(this, currentObserver);
+    }
+
+    private void loadLocale() {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "pt"); // "pt" como padrão se não houver escolha
+
+        // 1. Criar um objeto Locale com o código do idioma (ex: "pt", "en")
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale); // Define o idioma padrão
+
+        // 2. Obter a configuração atual dos recursos
+        android.content.res.Configuration config = getResources().getConfiguration();
+
+        // 3. Definir o novo idioma na configuração
+        config.setLocale(locale);
+
+        // 4. Aplicar a nova configuração aos recursos
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        // NÃO CHAMAR RECREATE AQUI!
+    }
+
+    private void changeLocaleAndRecreate(String languageCode) {
+        // 1. Guardar a escolha
+        saveLocale(languageCode);
+
+        // 2. Aplicar a nova configuração (igual ao loadLocale)
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        android.content.res.Configuration config = getResources().getConfiguration();
+        config.setLocale(locale);
+        getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+
+        // 3. Recriar a Activity
+        recreate();
+    }
+
+    private void saveLocale(String languageCode) {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("My_Lang", languageCode);
+        editor.apply();
     }
 
 

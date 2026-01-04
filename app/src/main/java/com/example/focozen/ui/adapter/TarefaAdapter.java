@@ -103,7 +103,7 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         // 3. Data de Vencimento
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String dataFormatada = sdf.format(currentTarefa.getDataVencimento());
-        holder.textViewData.setText("Vence: " + dataFormatada);
+        holder.textViewData.setText(context.getString(R.string.label_due_date) + dataFormatada);
 
         // 4. Comportamento de Clique (para Edição)
         holder.itemView.setOnClickListener(v -> {
@@ -133,12 +133,19 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
 
     // Método auxiliar para converter o int da prioridade em texto
     private String getPrioridadeTexto(int prioridade) {
-        switch (prioridade) {
-            case 3: return "ALTA";
-            case 2: return "MÉDIA";
-            case 1: return "BAIXA";
-            default: return "N/A";
+        // O array de prioridades é 0-based (0, 1, 2)
+        // O valor da prioridade na BD é 1-based (1, 2, 3)
+
+        // Obter o array de strings do recurso
+        String[] prioridades = context.getResources().getStringArray(R.array.prioridades_array);
+
+        // Verificar se a prioridade está dentro do limite
+        if (prioridade >= 1 && prioridade <= prioridades.length) {
+            // Retorna o texto correspondente (prioridade - 1 para 0-based)
+            return prioridades[prioridade - 1];
         }
+
+        return "N/A";
     }
 
     // ViewHolder: Mapeia os elementos do layout para a classe Java

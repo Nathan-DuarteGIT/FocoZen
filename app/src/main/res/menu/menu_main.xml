@@ -5,35 +5,51 @@
     <!-- Opção de Ordenação -->
     <item
         android:id="@+id/action_sort"
-        android:title="Ordenar"
+        android:title="@string/menu_sort"
         android:icon="@drawable/ic_sort"
         app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/sort_by_date"
-                android:title="Por Data de Vencimento" />
+                android:title="@string/sort_by_date" />
             <item
                 android:id="@+id/sort_by_priority"
-                android:title="Por Prioridade" />
+                android:title="@string/sort_by_priority" />
         </menu>
     </item>
 
     <!-- Opção de Filtro -->
     <item
         android:id="@+id/action_filter"
-        android:title="Filtrar"
+        android:title="@string/menu_filter"
         android:icon="@drawable/ic_filter"
         app:showAsAction="ifRoom">
         <menu>
             <item
                 android:id="@+id/filter_all"
-                android:title="Todas as Tarefas" />
+                android:title="@string/filter_all" />
             <item
                 android:id="@+id/filter_pending"
-                android:title="Pendentes" />
+                android:title="@string/filter_pending" />
             <item
                 android:id="@+id/filter_completed"
-                android:title="Concluídas" />
+                android:title="@string/filter_completed" />
+        </menu>
+    </item>
+
+
+    <item
+        android:id="@+id/action_language"
+        android:title="@string/menu_language"
+        android:icon="@drawable/baseline_language_24"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/lang_pt"
+                android:title="Português" />
+            <item
+                android:id="@+id/lang_en"
+                android:title="English" />
         </menu>
     </item>
 

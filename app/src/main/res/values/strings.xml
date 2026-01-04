@@ -1,8 +1,32 @@
 <resources>
     <string name="app_name">FocoZen</string>
+    <string name="title_add_task">Adicionar Tarefa</string>
+    <string name="title_edit_task">Editar Tarefa</string>
+    <string name="hint_title">Título da Tarefa</string>
+    <string name="hint_description">Descrição (Opcional)</string>
+    <string name="label_priority">Prioridade:</string>
+    <string name="label_due_date">Data de Vencimento:</string>
+    <string name="label_select_date">Selecionar Data</string>
+    <string name="button_save">Guardar Tarefa</string>
+    <string name="toast_title_required">O título é obrigatório</string>
+    <string name="toast_task_saved">Tarefa guardada!</string>
+    <string name="toast_task_updated">Tarefa atualizada!</string>
+    <string name="toast_task_deleted">Tarefa eliminada!</string>
+
+
     <string-array name="prioridades_array">
         <item>Baixa</item>
         <item>Média</item>
         <item>Alta</item>
     </string-array>
+
+    <!-- Menu Strings -->
+    <string name="menu_sort">Ordenar</string>
+    <string name="menu_filter">Filtrar</string>
+    <string name="sort_by_date">Por Data de Vencimento</string>
+    <string name="sort_by_priority">Por Prioridade</string>
+    <string name="filter_all">Todas as Tarefas</string>
+    <string name="filter_pending">Pendentes</string>
+    <string name="filter_completed">Concluídas</string>
+    <string name="menu_language">Linguagem</string>
 </resources>
