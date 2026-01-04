@@ -12,6 +12,8 @@
     <string name="toast_task_saved">Tarefa guardada!</string>
     <string name="toast_task_updated">Tarefa atualizada!</string>
     <string name="toast_task_deleted">Tarefa eliminada!</string>
+    <string name="toast_permission_granted">Permissão de Notificação Concedida</string>
+    <string name="toast_permission_denied">Permissão de Notificação Negada. Lembretes podem não funcionar.</string>
 
 
     <string-array name="prioridades_array">

@@ -12,6 +12,8 @@
     <string name="toast_task_saved">Task saved!</string>
     <string name="toast_task_updated">Task updated!</string>
     <string name="toast_task_deleted">Task deleted!</string>
+    <string name="toast_permission_granted">Notification Permission Granted</string>
+    <string name="toast_permission_denied">Notification Permission Denied. Reminders may not work.</string>
     
     <string-array name="prioridades_array">
         <item>Low</item>

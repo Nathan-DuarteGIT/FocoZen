@@ -1,9 +1,14 @@
 package com.example.focozen.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -55,6 +60,20 @@ public class MainActivity extends AppCompatActivity {
 
         init();
     }
+
+    private static final int PERMISSION_REQUEST_CODE = 100;
+
+    private void requestNotificationPermission() {
+        // Verificar se a versão do Android é 13 (API 33) ou superior
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // TIRAMISU é API 33
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                // A permissão não foi concedida, pedir ao utilizador
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, PERMISSION_REQUEST_CODE);
+            }
+        }
+        // Para versões anteriores ao Android 13, a permissão é concedida automaticamente
+    }
+
 
     /**
      * Método responsável por inicializar:
@@ -144,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(recyclerView);
 
+        requestNotificationPermission();
         /**
          * Clique no FAB → adicionar nova tarefa
          */
@@ -272,5 +292,18 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permissão concedida
+                Toast.makeText(this, getString(R.string.toast_permission_granted), Toast.LENGTH_SHORT).show();
+            } else {
+                // Permissão negada
+                Toast.makeText(this, getString(R.string.toast_permission_denied), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
 }
